@@ -3,6 +3,7 @@ import random
 from flask import Flask, request
 from pymessenger.bot import Bot
 import requests
+import json
 
 
 app = Flask(__name__)
@@ -53,7 +54,7 @@ def get_agent():
     s = requests.Session()
     result = s.get(api_url + '&lang=en' + '&sessionId=1234567890', headers=head)
     data = result.json()
-    return data
+    return data['displayName']
 
 
 @app.route('/connect')
@@ -63,7 +64,7 @@ def get_response(query, agent):
     s = requests.Session()
     result = s.get(api_url + query + '&lang=en', headers=head, queryInput=query)
     result = result.json()
-    return result
+    return json.dumps(result)
 
 # uses PyMessenger to send response to user
 def send_message(recipient_id, response):
