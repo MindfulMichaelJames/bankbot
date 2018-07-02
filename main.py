@@ -35,6 +35,7 @@ def receive_message():
                         client_message = message['message'].get('text')
                         response = get_response(client_message)
                         send_message(recipient_id, response)
+                    send_message(recipient_id, "Received")
     return client_message
 
 
