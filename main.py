@@ -11,12 +11,11 @@ ACCESS_TOKEN = 'EAAD6V6iE3WgBACqrKihuiypnBySVfNGZCmjW6HEcZBaZBPouF6PPmVSD1dbfFAq
 VERIFY_TOKEN = 'BANKBOTTESTINGTOKEN'
 bot = Bot(ACCESS_TOKEN)
 
-client_message = ""
-
 
 # We will receive messages that Facebook sends our bot at this endpoint
 @app.route("/", methods=['GET', 'POST'])
 def receive_message():
+    client_message = ""
     if request.method == 'GET':
         """Before allowing people to message your bot, Facebook has implemented a verify token
         that confirms all requests that your bot receives came from Facebook."""
