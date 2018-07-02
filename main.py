@@ -48,7 +48,7 @@ def verify_fb_token(token_sent):
 
 @app.route('/connect')
 def get_response(query):
-    api_url = 'POST https://dialogflow.googleapis.com/v2beta1/{session=projects/bankbot-868c9/agent/sessions/1234567890}:detectIntent?queryInput=' + query
+    api_url = 'https://dialogflow.googleapis.com/v2beta1/{session=projects/bankbot-868c9/agent/sessions/1234567890}:detectIntent?queryInput=' + query
     head = {'Authorization': 'Bearer 4414a0209d5f449d948420ee42f6aa9a'}
     s = requests.Session()
     result = s.get(api_url + query + '&lang=en', headers=head)
