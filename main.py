@@ -34,8 +34,7 @@ def receive_message():
                     recipient_id = message['sender']['id']
                     if message['message'].get('text'):
                         client_message = message['message'].get('text')
-                        my_agent = get_agent()
-                        response = get_response(client_message, my_agent)
+                        response = get_response(client_message)
                         send_message(recipient_id, response)
     return client_message
 
@@ -48,17 +47,7 @@ def verify_fb_token(token_sent):
     return 'Invalid verification token'
 
 @app.route('/connect')
-def get_agent():
-    api_url = 'GET https://dialogflow.googleapis.com/v2beta1/{parent=projects/bankbot-868c9}/agent'
-    head = {'Authorization': 'Bearer 4414a0209d5f449d948420ee42f6aa9a'}
-    s = requests.Session()
-    result = s.get(api_url + '&lang=en' + '&sessionId=1234567890', headers=head)
-    data = result.json()
-    return data['displayName']
-
-
-@app.route('/connect')
-def get_response(query, agent):
+def get_response(query):
     api_url = 'POST https://dialogflow.googleapis.com/v2beta1/{session=projects/bankbot-868c9/agent/sessions/1234567890}:detectIntent'
     head = {'Authorization': 'Bearer 4414a0209d5f449d948420ee42f6aa9a'}
     s = requests.Session()
