@@ -52,8 +52,8 @@ def get_response(query):
     head = {'Authorization': 'Bearer 4414a0209d5f449d948420ee42f6aa9a'}
     s = requests.Session()
     result = s.get(api_url + query + '&lang=en', headers=head)
-    data = json.loads(result.text)
-    return json.dumps(data)
+    # data = json.loads(result.text)
+    return result.text
 
 # uses PyMessenger to send response to user
 def send_message(recipient_id, response):
