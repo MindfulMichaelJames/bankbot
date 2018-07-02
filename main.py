@@ -1,14 +1,16 @@
-# -*- coding: utf-8 -*-
 # Python libraries that we need to import for our bot
-# import dialogflow
 import random
 from flask import Flask, request
 from pymessenger.bot import Bot
+import requests
+
 
 app = Flask(__name__)
 ACCESS_TOKEN = 'EAAD6V6iE3WgBACqrKihuiypnBySVfNGZCmjW6HEcZBaZBPouF6PPmVSD1dbfFAqYDCTJ3A2Gry084MLHXNWBZC0dwoOkEwSwYoO8sIPrQVBGC1xL2y1QW3w6zEr4QwYFAg9ZAer1XLimcLTxiPVGHlWUoQqBdl9Nd6loHBpBcgwZDZD'
 VERIFY_TOKEN = 'BANKBOTTESTINGTOKEN'
 bot = Bot(ACCESS_TOKEN)
+
+client_message = ""
 
 
 # We will receive messages that Facebook sends our bot at this endpoint
@@ -30,13 +32,11 @@ def receive_message():
                     # Facebook Messenger ID for user so we know where to send response back to
                     recipient_id = message['sender']['id']
                     if message['message'].get('text'):
-                        response_sent_text = get_message()
-                        send_message(recipient_id, response_sent_text)
-                    # if user sends us a GIF, photo,video, or any other non-text item
-                    if message['message'].get('attachments'):
-                        response_sent_nontext = get_message()
-                        send_message(recipient_id, response_sent_nontext)
-    return "Message Processed"
+                        client_message = message['message'].get('text')
+                        my_agent = get_agent()
+                        response = get_response(client_message, my_agent)
+                        send_message(recipient_id, response)
+    return client_message
 
 
 def verify_fb_token(token_sent):
@@ -46,14 +46,24 @@ def verify_fb_token(token_sent):
         return request.args.get("hub.challenge")
     return 'Invalid verification token'
 
+@app.route('/connect')
+def get_agent():
+    api_url = 'GET https://dialogflow.googleapis.com/v2beta1/{parent=projects/bankbot-868c9}/agent'
+    head = {'Authorization': 'Bearer 4414a0209d5f449d948420ee42f6aa9a'}
+    s = requests.Session()
+    result = s.get(api_url + '&lang=en' + '&sessionId=1234567890', headers=head)
+    data = result.json()
+    return data
 
-# chooses a random message to send to the user
-def get_message():
-    sample_responses = ["You are stunning!", "We're proud of you.", "Keep on being you!",
-                        "We're greatful to know you :)"]
-    # return selected item to the user
-    return random.choice(sample_responses)
 
+@app.route('/connect')
+def get_response(query, agent):
+    api_url = 'POST https://dialogflow.googleapis.com/v2beta1/{session=projects/bankbot-868c9/agent/sessions/1234567890}:detectIntent'
+    head = {'Authorization': 'Bearer 4414a0209d5f449d948420ee42f6aa9a'}
+    s = requests.Session()
+    result = s.get(api_url + query + '&lang=en', headers=head, queryInput=query)
+    result = result.json()
+    return result
 
 # uses PyMessenger to send response to user
 def send_message(recipient_id, response):
@@ -64,31 +74,3 @@ def send_message(recipient_id, response):
 
 if __name__ == "__main__":
     app.run()
-
-
-# def detect_intent_texts(project_id, session_id, texts, language_code):
-#     """Returns the result of detect intent with texts as inputs.
-#
-#     Using the same `session_id` between requests allows continuation
-#     of the conversaion."""
-#     session_client = dialogflow.SessionsClient()
-#
-#     session = session_client.session_path(project_id, session_id)
-#     print('Session path: {}\n'.format(session))
-#
-#     for text in texts:
-#         text_input = dialogflow.types.TextInput(
-#             text=text, language_code=language_code)
-#
-#         query_input = dialogflow.types.QueryInput(text=text_input)
-#
-#         response = session_client.detect_intent(
-#             session=session, query_input=query_input)
-#
-#         print('=' * 20)
-#         print('Query text: {}'.format(response.query_result.query_text))
-#         print('Detected intent: {} (confidence: {})\n'.format(
-#             response.query_result.intent.display_name,
-#             response.query_result.intent_detection_confidence))
-#         print('Fulfillment text: {}\n'.format(
-#             response.query_result.fulfillment_text))
