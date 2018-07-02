@@ -7,7 +7,7 @@ import json
 
 
 app = Flask(__name__)
-ACCESS_TOKEN = 'EAAD6V6iE3WgBACqrKihuiypnBySVfNGZCmjW6HEcZBaZBPouF6PPmVSD1dbfFAqYDCTJ3A2Gry084MLHXNWBZC0dwoOkEwSwYoO8sIPrQVBGC1xL2y1QW3w6zEr4QwYFAg9ZAer1XLimcLTxiPVGHlWUoQqBdl9Nd6loHBpBcgwZDZD'
+ACCESS_TOKEN = 'EAAD6V6iE3WgBABDSCRcoGaF30IjKQwuzVZCzKV2WEstEedORTq28af8Xn1G3Fj7qLTm3ZAaWMUcMmX814nxDhILB83tbU8QUx16dKt4yyhpCJvh83Rd9TvMs6ZAfySSRWnraOSZCP0uubFGriRZBdMmqnrmEWRXCwgVCfSXvm2AZDZD'
 VERIFY_TOKEN = 'BANKBOTTESTINGTOKEN'
 bot = Bot(ACCESS_TOKEN)
 
@@ -31,11 +31,11 @@ def receive_message():
                 if message.get('message'):
                     # Facebook Messenger ID for user so we know where to send response back to
                     recipient_id = message['sender']['id']
+                    send_message(recipient_id, "Received")
                     if message['message'].get('text'):
                         client_message = message['message'].get('text')
                         response = get_response(client_message)
                         send_message(recipient_id, response)
-                    send_message(recipient_id, "Received")
     return client_message
 
 
@@ -46,6 +46,7 @@ def verify_fb_token(token_sent):
         return request.args.get("hub.challenge")
     return 'Invalid verification token'
 
+
 @app.route('/connect')
 def get_response(query):
     api_url = 'https://dialogflow.googleapis.com/v2beta1/{session=projects/bankbot-868c9/agent/sessions/1234567890}:detectIntent?queryInput=' + query
@@ -54,6 +55,7 @@ def get_response(query):
     result = s.get(api_url + query + '&lang=en', headers=head)
     # data = json.loads(result.text)
     return result.text
+
 
 # uses PyMessenger to send response to user
 def send_message(recipient_id, response):
