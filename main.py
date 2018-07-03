@@ -79,7 +79,8 @@ def english_to_zulu(etext):
     # result = translate_client.translate(
     #     etext,
     #     target_language="Zulu")
-    return result["translatedText"]
+    # return result["translatedText"]
+    return result.text
 
 def zulu_to_english(ztext):
     result = translator.translate(ztext, src='zu', dest='en')
@@ -87,13 +88,14 @@ def zulu_to_english(ztext):
     # result = translate_client.translate(
     #     ztext,
     #     target_language="English")
-    return result["translatedText"]
+    # return result["translatedText"]
+    return result.text
 
 # uses PyMessenger to send response to user
 def send_message(recipient_id, response):
     # sends user the text message provided via input response parameter
     bot.send_text_message(recipient_id, response)
-    return "success"
+    # return "success"
 
 
 if __name__ == "__main__":
