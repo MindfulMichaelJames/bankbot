@@ -53,9 +53,9 @@ def receive_message():
                         # Tracing statement
                         send_message(recipient_id, english_response)
                         # Get intent from Watson
-                        intent = get_response(english_response)['intents'][0]
+                        intent = get_response(english_response)
                         # Tracing statement
-                        send_message(recipient_id, intent)
+                        send_message(recipient_id, json.dumps(intent))
                         # Get result of bank operation
                         # english_result = bank_api.process_request(intent, account)
                         # # Tracing statement
