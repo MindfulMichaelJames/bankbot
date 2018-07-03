@@ -1,12 +1,12 @@
 # Python libraries that we need to import for our bot
-import random
-from flask import Flask, request
-from pymessenger.bot import Bot
-import requests
 import json
+import random
+import requests
 import watson_developer_cloud
+from flask import Flask, request
 from google.cloud import translate
-
+from googletrans import Translator
+from pymessenger.bot import Bot
 
 app = Flask(__name__)
 ACCESS_TOKEN = 'EAAD6V6iE3WgBABDSCRcoGaF30IjKQwuzVZCzKV2WEstEedORTq28af8Xn1G3Fj7qLTm3ZAaWMUcMmX814nxDhILB83tbU8QUx16dKt4yyhpCJvh83Rd9TvMs6ZAfySSRWnraOSZCP0uubFGriRZBdMmqnrmEWRXCwgVCfSXvm2AZDZD'
@@ -17,6 +17,7 @@ assistant = watson_developer_cloud.AssistantV1(
     password='iUSjVYO5fLjb',
     version='2018-02-16'
 )
+translator = Translator()
 
 # We will receive messages that Facebook sends our bot at this endpoint
 @app.route("/", methods=['GET', 'POST'])
@@ -46,7 +47,7 @@ def receive_message():
                             }
                         )
                         result = response['intents'][0]['intent']
-                        etext="How much money do I have?"
+                        etext = "How much money do I have?"
                         zulu_response = english_to_zulu(etext)
                         send_message(recipient_id, result)
                         send_message(recipient_id, zulu_response)
@@ -73,17 +74,19 @@ def get_response(query):
     return result.text
 
 def english_to_zulu(etext):
-    translate_client = translate.Client()
-    result = translate_client.translate(
-        etext,
-        target_language="Zulu")
+    result = translator.translate(etext, src='en', dest='zu')
+    # translate_client = translate.Client()
+    # result = translate_client.translate(
+    #     etext,
+    #     target_language="Zulu")
     return result["translatedText"]
 
 def zulu_to_english(ztext):
-    translate_client = translate.Client()
-    result = translate_client.translate(
-        ztext,
-        target_language="English")
+    result = translator.translate(ztext, src='zu', dest='en')
+    # translate_client = translate.Client()
+    # result = translate_client.translate(
+    #     ztext,
+    #     target_language="English")
     return result["translatedText"]
 
 # uses PyMessenger to send response to user
