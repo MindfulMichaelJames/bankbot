@@ -54,14 +54,12 @@ def receive_message():
                         # Tracing statement
                         send_message(recipient_id, english_response)
                         # Get intent from Watson
-                        intent = get_response(english_response)['output']['text'][0]
+                        whole_response = get_response(english_response)
+                        intent = whole_response['output']['text'][0]
                         # Tracing statement
                         send_message(recipient_id, intent)
-                        if intent == "Are you sure?" or intent == "Payment canceled":
-                            english_result = intent
-                        else:
-                            # Get result of bank operation
-                            english_result = bank_api.process_request(intent, account)
+                        # Get result of bank operation
+                        english_result = bank_api.process_request(intent, account)
                         # Tracing statement
                         send_message(recipient_id, english_result)
                         # Translate bank operation result to Zulu
@@ -89,6 +87,7 @@ def get_response(client_message):
     )
     return response
 
+
 def english_to_zulu(etext):
     result = translator.translate(etext, src='en', dest='zu')
     # translate_client = translate.Client()
@@ -98,6 +97,7 @@ def english_to_zulu(etext):
     # return result["translatedText"]
     return result.text
 
+
 def zulu_to_english(ztext):
     result = translator.translate(ztext, src='zu', dest='en')
     # translate_client = translate.Client()
@@ -106,6 +106,7 @@ def zulu_to_english(ztext):
     #     target_language="English")
     # return result["translatedText"]
     return result.text
+
 
 # uses PyMessenger to send response to user
 def send_message(recipient_id, response):

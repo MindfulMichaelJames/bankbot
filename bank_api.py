@@ -17,6 +17,8 @@ def process_request(response_string, account):
         return get_debit_orders(account)
     elif command == "return_default":
         return return_default()
+    elif command == "greeting":
+        return return_greeting()
 
 
 def get_balance(account):
@@ -44,3 +46,7 @@ def get_debit_orders(account):
 
 def return_default():
     return "I don't understand. What do you mean?"
+
+
+def return_greeting():
+    return "Hello. My name is e-Mali. How can I help you?"
