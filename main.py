@@ -45,7 +45,7 @@ def receive_message():
                                 'text': client_message
                             }
                         )
-                        result = response['intents'][0]['intents']
+                        result = response['intents'][0]['intent']
                         send_message(recipient_id, result)
     return "Message processed"
 
