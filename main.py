@@ -12,8 +12,8 @@ ACCESS_TOKEN = 'EAAD6V6iE3WgBABDSCRcoGaF30IjKQwuzVZCzKV2WEstEedORTq28af8Xn1G3Fj7
 VERIFY_TOKEN = 'BANKBOTTESTINGTOKEN'
 bot = Bot(ACCESS_TOKEN)
 assistant = watson_developer_cloud.AssistantV1(
-    username='hrrmic014@myuct.ac.za',
-    password='Mikeyhharm12',
+    username='be96309c-202b-46bd-b4c2-8208cea8f234',
+    password='iUSjVYO5fLjb',
     version='2018-02-16'
 )
 
