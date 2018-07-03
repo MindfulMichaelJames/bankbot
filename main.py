@@ -53,17 +53,17 @@ def receive_message():
                         # Tracing statement
                         send_message(recipient_id, english_response)
                         # Get intent from Watson
-                        intent = get_response(english_response)['intents'][0]['intent']
+                        intent = get_response(english_response)['intents'][0]
                         # Tracing statement
                         send_message(recipient_id, intent)
                         # Get result of bank operation
-                        english_result = bank_api.process_request(intent, account)
-                        # Tracing statement
-                        send_message(recipient_id, intent)
-                        # Translate bank operation result to Zulu
-                        zulu_result = english_to_zulu(english_result)
-                        # Send Zulu result to FB message
-                        send_message(recipient_id, zulu_result)
+                        # english_result = bank_api.process_request(intent, account)
+                        # # Tracing statement
+                        # send_message(recipient_id, intent)
+                        # # Translate bank operation result to Zulu
+                        # zulu_result = english_to_zulu(english_result)
+                        # # Send Zulu result to FB message
+                        # send_message(recipient_id, zulu_result)
     return "Message processed"
 
 
