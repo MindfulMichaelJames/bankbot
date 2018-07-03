@@ -36,7 +36,6 @@ def receive_message():
                 if message.get('message'):
                     # Facebook Messenger ID for user so we know where to send response back to
                     recipient_id = message['sender']['id']
-                    send_message(recipient_id, "Received")
                     if message['message'].get('text'):
                         client_message = message['message'].get('text')
                         response = assistant.message(
