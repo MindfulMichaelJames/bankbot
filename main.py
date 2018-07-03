@@ -5,6 +5,7 @@ from pymessenger.bot import Bot
 import requests
 import json
 import watson_developer_cloud
+from google.cloud import translate
 
 
 app = Flask(__name__)
@@ -45,7 +46,12 @@ def receive_message():
                             }
                         )
                         result = response['intents'][0]['intent']
+                        etext="How much money do I have?"
+                        zulu_response = english_to_zulu(etext)
                         send_message(recipient_id, result)
+                        send_message(recipient_id, zulu_response)
+                        english_response = zulu_to_english(zulu_response)
+                        send_message(recipient_id, english_response)
     return "Message processed"
 
 
@@ -66,6 +72,19 @@ def get_response(query):
     # data = json.loads(result.text)
     return result.text
 
+def english_to_zulu(etext):
+    translate_client = translate.Client()
+    result = translate_client.translate(
+        etext,
+        target_language="Zulu")
+    return result["translatedText"]
+
+def zulu_to_english(ztext):
+    translate_client = translate.Client()
+    result = translate_client.translate(
+        ztext,
+        target_language="English")
+    return result["translatedText"]
 
 # uses PyMessenger to send response to user
 def send_message(recipient_id, response):
