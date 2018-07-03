@@ -31,7 +31,7 @@ def pay_recipient(account, payment_args):
     if account['balance'] < eval(payment_args[2]):
         return "You do not have enough money in your account to complete this transaction"
     else:
-        return "R{} paid to {}.".format(payment_args[0], payment_args[1])
+        return "R{} paid to {} {}.".format(payment_args[2], payment_args[0], payment_args[1])
 
 
 def get_transactions(account):
