@@ -35,11 +35,11 @@ def pay_recipient(account, payment_args):
 
 
 def get_transactions(account):
-    return "Here are your latest payments: {}".format("\n".join(account['transactions']))
+    return "Here are your latest payments:\n{}".format("\n".join(account['transactions']))
 
 
 def get_debit_orders(account):
-    return "Here are your debit orders: {}".format("\n".join(account['orders']))
+    return "Here are your debit orders:\n{}".format("\n".join(account['orders']))
 
 
 def return_default():
