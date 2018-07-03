@@ -23,7 +23,8 @@ account = {'balance': 120000,
            'beneficiaries': ["Ayanda Mhlongo", "Busi Dlamini"],
            'transactions': ["R200 to Jonas Mthembu", "R140 to Menzi Ndlovu"],
            'orders': ["Planet Fitness: R400", "Telkom: R700"]}
-
+payment_details = ""
+zulu_result = ""
 
 # We will receive messages that Facebook sends our bot at this endpoint
 @app.route("/", methods=['GET', 'POST'])
@@ -53,18 +54,30 @@ def receive_message():
                         english_response = zulu_to_english(zulu_response)
                         # Tracing statement
                         send_message(recipient_id, english_response)
-                        # Get intent from Watson
-                        intent = get_response(english_response)['output']['text'][0]
-                        # Tracing statement
-                        send_message(recipient_id, intent)
-                        # Get result of bank operation
-                        english_result = bank_api.process_request(intent, account)
-                        # Tracing statement
-                        send_message(recipient_id, english_result)
-                        # Translate bank operation result to Zulu
-                        zulu_result = english_to_zulu(english_result)
-                        # Send Zulu result to FB message
-                        send_message(recipient_id, zulu_result)
+                        if english_response == "Yes":
+                            send_message(recipient_id, zulu_result)
+                        elif english_response == "No":
+                            send_message(recipient_id, "Inkokhelo ikhanseliwe")
+                        else:
+                            # Get intent from Watson
+                            intent = get_response(english_response)['output']['text'][0]
+                            # Tracing statement
+                            send_message(recipient_id, intent)
+                            # Get result of bank operation
+                            english_result = bank_api.process_request(intent, account)
+                            # Tracing statement
+                            send_message(recipient_id, english_result)
+                            # Translate bank operation result to Zulu
+                            zulu_result = english_to_zulu(english_result)
+                            # Send Zulu result to FB message
+                            intent_list = intent.split()
+                            if intent_list[0] == "pay_recipient":
+                                confirmation = "Uqinisekile ukuthi ufuna ukukhokha {}{} R{}?".format(intent_list[1],
+                                                                                                     intent_list[2],
+                                                                                                     intent_list[3])
+                                send_message(recipient_id, confirmation)
+                            else:
+                                send_message(recipient_id, zulu_result)
     return "Message processed"
 
 
