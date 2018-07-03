@@ -1,7 +1,7 @@
 def process_request(response_string, account):
     response_list = response_string.split()
     command = response_list[0]
-    if len(response_list) > 0:
+    if len(response_list) > 1:
         response_args = response_list[1:]
     else:
         response_args = None

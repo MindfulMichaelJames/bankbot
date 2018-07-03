@@ -46,16 +46,19 @@ def receive_message():
                     if message['message'].get('text'):
                         # Get FB message text in Zulu
                         zulu_response = message['message'].get('text')
+                        send_message(recipient_id, zulu_response)
                         # Translate FB message to English
                         english_response = zulu_to_english(zulu_response)
+                        send_message(recipient_id, english_response)
                         # Get intent from Watson
                         intent = get_response(english_response)['intents'][0]['intent']
                         # Get result of bank operation
-                        english_result = bank_api.process_request(intent, account)
+                        # english_result = bank_api.process_request(intent, account)
                         # Translate bank operation result to Zulu
-                        zulu_result = english_to_zulu(english_result)
+                        # zulu_result = english_to_zulu(english_result)
                         # Send Zulu result to FB message
-                        send_message(recipient_id, zulu_result)
+                        # send_message(recipient_id, zulu_result)
+                        send_message(recipient_id, intent)
     return "Message processed"
 
 
