@@ -53,7 +53,7 @@ def receive_message():
                         # Tracing statement
                         send_message(recipient_id, english_response)
                         # Get intent from Watson
-                        intent = get_response(english_response)['output']['text']
+                        intent = get_response(english_response)['output']['text'][0]
                         # Tracing statement
                         send_message(recipient_id, intent)
                         # Get result of bank operation
