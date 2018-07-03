@@ -24,7 +24,7 @@ def get_balance(account):
 
 
 def get_beneficiaries(account):
-    return "These are the people in your list of beneficiaries: {}".format(', '.join(account['beneficiaries']))
+    return "These are the people in your list of beneficiaries:\n{}".format('\n'.join(account['beneficiaries']))
 
 
 def pay_recipient(account, payment_args):
