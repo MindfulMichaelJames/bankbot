@@ -16,7 +16,7 @@ def process_request(response_string, account):
     elif command == "get_debit_orders":
         return get_debit_orders(account)
     elif command == "return_default":
-        return return_default(account)
+        return return_default()
 
 
 def get_balance(account):

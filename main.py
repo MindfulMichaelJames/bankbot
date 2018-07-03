@@ -20,7 +20,7 @@ assistant = watson_developer_cloud.AssistantV1(
 )
 translator = Translator()
 account = {'balance': 120000,
-           'beneficiaries': ["Siya Mhlongo", "Busi Dlamini"],
+           'beneficiaries': ["Ayanda Mhlongo", "Busi Dlamini"],
            'transactions': ["R200 to Jonas Mthembu", "R140 to Menzi Ndlovu"],
            'orders': ["Virgin Active: R400", "Telkom: R700"]}
 
