@@ -57,8 +57,11 @@ def receive_message():
                         intent = get_response(english_response)['output']['text'][0]
                         # Tracing statement
                         send_message(recipient_id, intent)
-                        # Get result of bank operation
-                        english_result = bank_api.process_request(intent, account)
+                        if intent == "Are you sure?" or intent == "Payment canceled":
+                            english_result = intent
+                        else:
+                            # Get result of bank operation
+                            english_result = bank_api.process_request(intent, account)
                         # Tracing statement
                         send_message(recipient_id, english_result)
                         # Translate bank operation result to Zulu
