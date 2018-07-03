@@ -4,13 +4,18 @@ from flask import Flask, request
 from pymessenger.bot import Bot
 import requests
 import json
+import watson_developer_cloud
 
 
 app = Flask(__name__)
 ACCESS_TOKEN = 'EAAD6V6iE3WgBABDSCRcoGaF30IjKQwuzVZCzKV2WEstEedORTq28af8Xn1G3Fj7qLTm3ZAaWMUcMmX814nxDhILB83tbU8QUx16dKt4yyhpCJvh83Rd9TvMs6ZAfySSRWnraOSZCP0uubFGriRZBdMmqnrmEWRXCwgVCfSXvm2AZDZD'
 VERIFY_TOKEN = 'BANKBOTTESTINGTOKEN'
 bot = Bot(ACCESS_TOKEN)
-
+assistant = watson_developer_cloud.AssistantV1(
+    username='hrrmic014@myuct.ac.za',
+    password='Mikeyhharm12',
+    version='2018-02-16'
+)
 
 # We will receive messages that Facebook sends our bot at this endpoint
 @app.route("/", methods=['GET', 'POST'])
@@ -34,9 +39,15 @@ def receive_message():
                     send_message(recipient_id, "Received")
                     if message['message'].get('text'):
                         client_message = message['message'].get('text')
-                        response = get_response(client_message)
-                        send_message(recipient_id, response)
-    return client_message
+                        response = assistant.message(
+                            workspace_id='b5b8b4ce-af1f-49d4-8235-0229b7e01d57',
+                            input={
+                                'text': client_message
+                            }
+                        )
+                        dump = json.dumps(response)
+                        send_message(recipient_id, dump)
+    return "Message processed"
 
 
 def verify_fb_token(token_sent):
