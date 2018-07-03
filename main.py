@@ -51,7 +51,7 @@ def receive_message():
                         # Get intent from Watson
                         intent = get_response(english_response)['intents'][0]['intent']
                         # Get result of bank operation
-                        english_result = bank_api.process_request(intent)
+                        english_result = bank_api.process_request(intent, account)
                         # Translate bank operation result to Zulu
                         zulu_result = english_to_zulu(english_result)
                         # Send Zulu result to FB message
