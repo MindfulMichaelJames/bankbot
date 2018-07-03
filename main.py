@@ -45,8 +45,8 @@ def receive_message():
                                 'text': client_message
                             }
                         )
-                        dump = json.dumps(response)
-                        send_message(recipient_id, dump)
+                        result = response["intents"][0]["intents"]
+                        send_message(recipient_id, result)
     return "Message processed"
 
 
