@@ -4,9 +4,10 @@ import random
 import requests
 import watson_developer_cloud
 from flask import Flask, request
-from google.cloud import translate
 from googletrans import Translator
 from pymessenger.bot import Bot
+import bank_api
+
 
 app = Flask(__name__)
 ACCESS_TOKEN = 'EAAD6V6iE3WgBABDSCRcoGaF30IjKQwuzVZCzKV2WEstEedORTq28af8Xn1G3Fj7qLTm3ZAaWMUcMmX814nxDhILB83tbU8QUx16dKt4yyhpCJvh83Rd9TvMs6ZAfySSRWnraOSZCP0uubFGriRZBdMmqnrmEWRXCwgVCfSXvm2AZDZD'
@@ -18,6 +19,10 @@ assistant = watson_developer_cloud.AssistantV1(
     version='2018-02-16'
 )
 translator = Translator()
+account = {'balance': 120000,
+           'beneficiaries': ["Siya Mhlongo", "Busi Dlamini"],
+           'transactions': ["R200 to Jonas Mthembu", "R140 to Menzi Ndlovu"],
+           'orders': ["Virgin Active: R400", "Telkom: R700"]}
 
 # We will receive messages that Facebook sends our bot at this endpoint
 @app.route("/", methods=['GET', 'POST'])
@@ -39,20 +44,18 @@ def receive_message():
                     # Facebook Messenger ID for user so we know where to send response back to
                     recipient_id = message['sender']['id']
                     if message['message'].get('text'):
-                        client_message = message['message'].get('text')
-                        response = assistant.message(
-                            workspace_id='b5b8b4ce-af1f-49d4-8235-0229b7e01d57',
-                            input={
-                                'text': client_message
-                            }
-                        )
-                        result = response['intents'][0]['intent']
-                        etext = "How much money do I have?"
-                        zulu_response = english_to_zulu(etext)
-                        send_message(recipient_id, result)
-                        send_message(recipient_id, zulu_response)
+                        # Get FB message text in Zulu
+                        zulu_response = message['message'].get('text')
+                        # Translate FB message to English
                         english_response = zulu_to_english(zulu_response)
-                        send_message(recipient_id, english_response)
+                        # Get intent from Watson
+                        intent = get_response(english_response)['intents'][0]['intent']
+                        # Get result of bank operation
+                        english_result = bank_api.process_request(intent)
+                        # Translate bank operation result to Zulu
+                        zulu_result = english_to_zulu(english_result)
+                        # Send Zulu result to FB message
+                        send_message(recipient_id, zulu_result)
     return "Message processed"
 
 
@@ -65,13 +68,14 @@ def verify_fb_token(token_sent):
 
 
 @app.route('/connect')
-def get_response(query):
-    api_url = 'https://dialogflow.googleapis.com/v2/session=projects/bankbot-868c9/agent/sessions/1234567890:detectIntent?queryInput=' + query
-    head = {'Authorization': 'Bearer 4414a0209d5f449d948420ee42f6aa9a'}
-    s = requests.Session()
-    result = s.get(api_url + query + '&lang=en', headers=head)
-    # data = json.loads(result.text)
-    return result.text
+def get_response(client_message):
+    response = assistant.message(
+        workspace_id='b5b8b4ce-af1f-49d4-8235-0229b7e01d57',
+        input={
+            'text': client_message
+        }
+    )
+    return response
 
 def english_to_zulu(etext):
     result = translator.translate(etext, src='en', dest='zu')
