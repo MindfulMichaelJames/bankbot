@@ -48,5 +48,5 @@ virtualenv-clone==0.2.6
 virtualenvwrapper==4.8.2
 watson-developer-cloud==1.4.1
 wcwidth==0.1.7
-Werkzeug==0.14.1
+Werkzeug==0.15.3
 zope.interface==4.5.0
