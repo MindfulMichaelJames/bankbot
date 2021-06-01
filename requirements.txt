@@ -42,7 +42,7 @@ stevedore==1.28.0
 Twisted==18.4.0
 txaio==2.10.0
 uritemplate==3.0.0
-urllib3==1.23
+urllib3==1.26.5
 virtualenv==15.1.0
 virtualenv-clone==0.2.6
 virtualenvwrapper==4.8.2
